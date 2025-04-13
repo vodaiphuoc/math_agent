@@ -78,12 +78,14 @@ class JAXExtractModel(_BaseModel):
 
     def forward(self, input_prompt: str, image_paths: List[str]):
         # image pre-processing
-        images = np.stack([np.array(Image.open(_img_path))
+        images_list = [np.array(Image.open(_img_path))
                   for _img_path in image_paths
-                  ])
+                  ]
+
+        pad_img_tokens = '\n'.join(['<start_of_image>']*len(image_paths))
 
         out = self._sampler.chat(
-            f'{input_prompt}: <start_of_image>',
-            images = images,
+            f'{input_prompt}: \n{pad_img_tokens}',
+            images = images_list,
         )
         return out

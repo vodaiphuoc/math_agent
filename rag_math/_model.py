@@ -73,7 +73,7 @@ class JAXExtractModel(_BaseModel):
         self._sampler = gm.text.ChatSampler(
             model = model,
             params = params,
-            max_out_length = 4096
+            max_out_length = 2048
         )
 
     def forward(self, input_prompt: str, image_paths: List[str]):

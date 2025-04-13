@@ -1,0 +1,5 @@
+pymupdf==1.25.5
+pillow
+python-dotenv
+google-genai
+marker-pdf==0.3.2

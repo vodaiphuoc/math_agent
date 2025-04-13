@@ -1,0 +1,5 @@
+mathematics_dataset-v1.0/
+datasets/theories/
+.env
+myenv/
+__pycache__/

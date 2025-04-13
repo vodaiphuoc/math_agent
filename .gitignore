@@ -4,3 +4,4 @@ datasets/theories/
 myenv/
 __pycache__/
 *.png
+internal_readme.md

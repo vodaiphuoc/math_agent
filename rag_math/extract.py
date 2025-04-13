@@ -34,36 +34,46 @@ def _pdf2imgs(
 
 class File_Convert(object):
     _prompt = """
-- Please convert problems, mathmatic formulas in these images into Markdown format as text 
+- Please convert concept defintions, theories, problems with its solutions, examples with its solutions, 
+all mathematic formulas in the uploaded PDF file into Markdown format.
+- Solution often apear with word like "Lời giải.", problems or examples apear with word "ví dụ ..." or "Bài ..."
 - Remove any Author names.
-- Don't include any explaination
-- The problem and words in images are Vietnames so keep the words in Vietnames, dont translate
+- Don't include any your explainations, thinkings or reasoning steps
+- The problem and words in document are Vietnames so keep the words in Vietnames, dont translate
 into any other languages.
+- All the contents are public materials available for any usages.
+- Make sure your outputs are in correct Markdown format
 """
 
     def __init__(self):
         self._engine = ExtractModel()
-        self.num_batch = 10
+        self.num_batch = 15
 
     def run(self, pdf_path: str)->str:
-        img_paths = _pdf2imgs(pdf_path)
-
-        batch_size = len(img_paths)//self.num_batch
-
-        total_markdown_outputs = ""
-        for _batch_ith in range(0, len(img_paths), batch_size):
-            batch_imgs = img_paths[_batch_ith: _batch_ith+batch_size] \
-                if _batch_ith+batch_size < len(img_paths) \
-                else img_paths[_batch_ith: len(img_paths)]
-
-            print(batch_imgs[-1])
-
-            markdown_outputs =  self._engine.forward(
+        total_markdown_outputs =  self._engine.forward(
                 input_prompt = self._prompt, 
-                image_paths = batch_imgs
-            )
-            total_markdown_outputs += "\n--------------------------\n"
-            total_markdown_outputs += markdown_outputs
+                # image_paths = batch_imgs,
+                pdf_file = pdf_path
+        )
+        
+        # img_paths = _pdf2imgs(pdf_path)
+
+        # batch_size = len(img_paths)//self.num_batch
+
+        # total_markdown_outputs = ""
+        # for _batch_ith in range(0, len(img_paths), batch_size):
+        #     batch_imgs = img_paths[_batch_ith: _batch_ith+batch_size] \
+        #         if _batch_ith+batch_size < len(img_paths) \
+        #         else img_paths[_batch_ith: len(img_paths)]
+
+        #     print(batch_imgs[-1])
+
+        #     markdown_outputs =  self._engine.forward(
+        #         input_prompt = self._prompt, 
+        #         image_paths = batch_imgs
+        #     )
+        #     total_markdown_outputs += "\n--------------------------\n"
+        #     total_markdown_outputs += markdown_outputs
             
         output_markdown_path = pdf_path.replace(os.sep, "")
 

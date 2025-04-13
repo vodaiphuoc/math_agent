@@ -3,3 +3,4 @@ datasets/theories/
 .env
 myenv/
 __pycache__/
+*.png

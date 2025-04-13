@@ -14,8 +14,8 @@ import numpy as np
 class _BaseModel(ABC):
     def __init__(self):
         super().__init__()
-        load_dotenv()
-        self._client = genai.Client(api_key=os.environ['GOOGLE_API_KEY'])
+        # load_dotenv()
+        # self._client = genai.Client(api_key=os.environ['GOOGLE_API_KEY'])
 
     @abstractmethod
     def forward(self):

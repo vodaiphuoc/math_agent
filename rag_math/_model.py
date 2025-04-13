@@ -8,6 +8,9 @@ import os
 from dotenv import load_dotenv
 from abc import ABC, abstractmethod
 
+from gemma import gm
+import numpy as np
+
 class _BaseModel(ABC):
     def __init__(self):
         super().__init__()
@@ -53,4 +56,34 @@ class ExtractModel(_BaseModel):
 
         self._client.files.delete(name=file_upload.name)
         return response.text
-    
+
+
+class JAXExtractModel(_BaseModel):
+    r"""
+    Using JAX for runing gemma3-4b-it
+    """
+    def __init__(self):
+        super().__init__()
+        
+        os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"]="0.95"
+
+        model = gm.nn.Gemma3_4B()
+        params = gm.ckpts.load_params(gm.ckpts.CheckpointPath.GEMMA3_4B_IT)
+
+        self._sampler = gm.text.ChatSampler(
+            model = model,
+            params = params,
+            max_out_length = 4096
+        )
+
+    def forward(self, input_prompt: str, image_paths: List[str]):
+        # image pre-processing
+        images = np.stack([np.array(Image.open(_img_path))
+                  for _img_path in image_paths
+                  ])
+
+        out = self._sampler.chat(
+            f'{input_prompt}: <start_of_image>',
+            images = images,
+        )
+        return out

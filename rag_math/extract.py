@@ -3,7 +3,7 @@ from PIL import Image
 from PIL import ImageOps
 
 from typing import List
-from ._model import ExtractModel
+from ._model import ExtractModel, JAXExtractModel
 import os
 
 
@@ -26,7 +26,7 @@ def _pdf2imgs(
             img = img.resize((336, 336))
 
         curr_img_path = f".temp_images/page-{page.number}.png"
-        img.save(curr_img_path, format = "PNG")
+        img.save(curr_img_path, format = "JPEG")
         img_out_paths.append(curr_img_path)
 
     return img_out_paths
@@ -46,34 +46,29 @@ into any other languages.
 """
 
     def __init__(self):
-        self._engine = ExtractModel()
+        self._engine = JAXExtractModel()
         self.num_batch = 15
 
     def run(self, pdf_path: str)->str:
-        total_markdown_outputs =  self._engine.forward(
-                input_prompt = self._prompt, 
-                # image_paths = batch_imgs,
-                pdf_file = pdf_path
-        )
         
-        # img_paths = _pdf2imgs(pdf_path)
+        img_paths = _pdf2imgs(pdf_path)
 
-        # batch_size = len(img_paths)//self.num_batch
+        batch_size = len(img_paths)//self.num_batch
 
-        # total_markdown_outputs = ""
-        # for _batch_ith in range(0, len(img_paths), batch_size):
-        #     batch_imgs = img_paths[_batch_ith: _batch_ith+batch_size] \
-        #         if _batch_ith+batch_size < len(img_paths) \
-        #         else img_paths[_batch_ith: len(img_paths)]
+        total_markdown_outputs = ""
+        for _batch_ith in range(0, len(img_paths), batch_size):
+            batch_imgs = img_paths[_batch_ith: _batch_ith+batch_size] \
+                if _batch_ith+batch_size < len(img_paths) \
+                else img_paths[_batch_ith: len(img_paths)]
 
-        #     print(batch_imgs[-1])
+            print(batch_imgs[-1])
 
-        #     markdown_outputs =  self._engine.forward(
-        #         input_prompt = self._prompt, 
-        #         image_paths = batch_imgs
-        #     )
-        #     total_markdown_outputs += "\n--------------------------\n"
-        #     total_markdown_outputs += markdown_outputs
+            markdown_outputs =  self._engine.forward(
+                input_prompt = self._prompt, 
+                image_paths = batch_imgs
+            )
+            total_markdown_outputs += "\n--------------------------\n"
+            total_markdown_outputs += markdown_outputs
             
         output_markdown_path = pdf_path.replace(os.sep, "")
 

@@ -1,6 +1,5 @@
 pymupdf==1.25.5
 pillow
 python-dotenv
-google-genai
 gemma==3.0.2
 jax[cuda12]

@@ -47,8 +47,8 @@ into any other languages.
 
     def __init__(self):
         self._engine = JAXExtractModel()
-        self.num_batch = 25
-    
+        self.num_batch = 30
+
     def run(self, pdf_path: str)->str:
         
         img_paths = _pdf2imgs(pdf_path)

@@ -65,7 +65,7 @@ class JAXExtractModel(_BaseModel):
     def __init__(self):
         super().__init__()
         
-        os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"]="0.95"
+        # os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"]="0.95"
 
         model = gm.nn.Gemma3_4B()
         params = gm.ckpts.load_params(gm.ckpts.CheckpointPath.GEMMA3_4B_IT)

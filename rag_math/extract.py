@@ -48,7 +48,7 @@ into any other languages.
     def __init__(self):
         self._engine = JAXExtractModel()
         self.num_batch = 35
-    
+
     def run(self, pdf_path: str)->str:
         
         img_paths = _pdf2imgs(pdf_path)
@@ -64,7 +64,7 @@ into any other languages.
             print(batch_imgs[-1])
 
             markdown_outputs =  self._engine.forward(
-                input_prompt = self._prompt, 
+                input_prompt = self._prompt,
                 image_paths = batch_imgs
             )
             total_markdown_outputs += "\n--------------------------\n"
